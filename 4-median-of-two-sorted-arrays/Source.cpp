@@ -1,88 +1,171 @@
 // https://leetcode.com/problems/median-of-two-sorted-arrays/description/
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
+
+// i/o hack
+auto __NEEDFORSPEED__ = []() { std::ios::sync_with_stdio(false); cin.tie(NULL); return 0; }();
 
 class Solution
 {
 public:
-	double findMedianSortedArrays(vector<int>& A, vector<int>& B)
+	double easyMedian(vector<int>& A, vector<int>& B)
 	{
-		// inside this class A is always the smaller array
-		if (A.size() <= B.size())
+		// easy median calc
+		vector<int> new_vec(A);
+		double median;
+		for (int val : B)
 		{
-			this->A = &A;
-			this->B = &B;
+			new_vec.push_back(val);
+		}
+		sort(new_vec.begin(), new_vec.end());
+		if (new_vec.size() % 2 == 0)
+		{
+			median = (new_vec[new_vec.size() / 2] + new_vec[new_vec.size() / 2 - 1]) / 2.0;
 		}
 		else
 		{
-			this->A = &B;
-			this->B = &A;
+			median = new_vec[new_vec.size() / 2];
+		}
+		//for (int val : new_vec) cout << val << " "; cout << endl;
+		return median;
+	}
+	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
+	{
+		const vector<int>* A;
+		const vector<int>* B;
+
+		// make sure A is always the smaller of the two arrays (m <= n)
+		if (nums1.size() <= nums2.size())
+		{
+			A = &nums1;
+			B = &nums2;
+		}
+		else
+		{
+			A = &nums2;
+			B = &nums1;
 		}
 
-		// change this to binary search to get log(m + n)
-		for (int i = 0; i < this->A->size(); ++i)
+		int m = A->size();
+		int n = B->size();
+
+		// binary search
+		int l = 0;
+		int r = m;
+		int i, j;
+		while (l <= r)
 		{
-			int query = this->isMedian(i);
-			cout << " isMedian: " << query << endl;
-			if (query == 0)
+			i = (l + r) / 2;
+			j = (m + n) / 2 - i;
+
+			if (i < m && j > 0 && A->at(i) < B->at(j - 1))
 			{
-				// don't return yet, while debugging
-				//return this->A->at(i);
+				l = i + 1;
 			}
 			else
 			{
-				if (query > 0)
+				if (i > 0 && j < n && A->at(i - 1) > B->at(j))
 				{
-					// all the values in A starting from i are too large
-					// we know now where the median is in B
+					r = i - 1;
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
-		
-		// all the values in A are too small
-		// we know now where the median is in B
 
-		return 0;
-	}
-
-private:
-	// returns 0 if this is the median, -1 if value is less than median, 1 if greater than median
-	int isMedian(int i)
-	{
-		// size of right half of A (if this is the median)
-		int right = this->A->size() - (i + 1);
-		int left = i;
-		// first value in the right half of B
-		int j = (this->A->size() + this->B->size() + 1) / 2 - i;
-
-		cout << "i: " << i << " right: " << right << " j: " << j;
-		if (this->A->at(i) > this->B->at(j - 1))
+		int res;
+		if (i == m)
 		{
-			if (this->A->at(i) < this->B->at(j))
-			{
-				return 0;
-			}
-			else
-			{
-				return 1;
-			}
+			res = B->at(j);
 		}
 		else
 		{
-			return -1;
+			if (j == n)
+			{
+				res = A->at(i);
+			}
+			else
+			{
+				res = min(A->at(i), B->at(j));
+			}
 		}
-	}
 
-	vector<int>* A;
-	vector<int>* B;
+		if ((m + n) % 2 != 0)
+		{
+			return res;
+		}
+
+		if (i == 0)
+		{
+			res += B->at(j - 1);
+		}
+		else
+		{
+			if (j == 0)
+			{
+				res += A->at(i - 1);
+			}
+			else
+			{
+				res += max(A->at(i - 1), B->at(j - 1));
+			}
+		}
+		return res / 2.0;
+	}
 };
 
 int main()
 {
-	vector<int> A = { 1,2,3,6,7,8 };
-	vector<int> B = { 0,4,5,10 };
-	cout << "solution: " << Solution().findMedianSortedArrays(A, B) << endl;
+	vector<int> A;
+	vector<int> B;
+
+	Solution sol;
+
+	double median, attempt;
+	for (int i = 0; i < 100000; ++i)
+	{
+		A.clear();
+		B.clear();
+		int m = rand() % 5 + 1;
+		int n = rand() % 5 + 1;
+		int a = rand() % 100;
+		int b = rand() % 100;
+		for (int i = 0; i < m; ++i)
+		{
+			A.push_back(a);
+			a += rand() % 10;
+		}
+		for (int i = 0; i < n; ++i)
+		{
+			B.push_back(b);
+			b += rand() % 10;
+		}
+
+		median = sol.easyMedian(A, B);
+		attempt = sol.findMedianSortedArrays(A, B);
+
+		if (median != attempt)
+		{
+			for (int val : A)
+			{
+				cout << val << " ";
+			}
+			cout << endl;
+			for (int val : B)
+			{
+				cout << val << " ";
+			}
+			cout << endl;
+			cout << "median: " << median << endl;
+			cout << "solution: " << attempt;
+			cout << endl;
+		}
+	}
+
 	return 0;
 }
