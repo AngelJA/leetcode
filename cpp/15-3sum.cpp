@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "./util.h"
+
 using std::cout;
 using std::vector;
 
@@ -59,8 +61,9 @@ class Solution {
 };
 
 int main() {
-    vector<int> A = { -1, 0, 1, 2, -1, -4 };
-    vector<vector<int>> sol = Solution().threeSum(A);
+    test(Solution().threeSum({-1, 0, 1, 2, -1, -4}), {{-1, -1, 2}, {-1, 0, 1}});
+    test(Solution().threeSum({}), {});
+    test(Solution().threeSum({0}), {});
 
     return 0;
 }
