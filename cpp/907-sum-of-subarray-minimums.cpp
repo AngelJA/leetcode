@@ -4,6 +4,8 @@
 #include <vector>
 #include <stack>
 
+#include "./util.h"
+
 using std::pow;
 using std::stack;
 using std::vector;
@@ -63,5 +65,8 @@ class Solution {
 };
 
 int main() {
+    test(Solution().sumSubarrayMins({3, 1, 2, 4}), 17);
+    test(Solution().sumSubarrayMins({11, 81, 94, 43, 3}), 444);
+            
     return 0;
 }

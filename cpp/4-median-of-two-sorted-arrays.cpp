@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "./util.h"
+
 using std::cout;
 using std::endl;
 using std::max;
@@ -94,45 +96,11 @@ class Solution {
 };
 
 int main() {
-    vector<int> A;
-    vector<int> B;
-
-    Solution sol;
-
-    double median, attempt;
-    for (int i = 0; i < 100000; ++i) {
-        A.clear();
-        B.clear();
-        int m = rand() % 5 + 1;
-        int n = rand() % 5 + 1;
-        int a = rand() % 100;
-        int b = rand() % 100;
-        for (int i = 0; i < m; ++i) {
-            A.push_back(a);
-            a += rand() % 10;
-        }
-        for (int i = 0; i < n; ++i) {
-            B.push_back(b);
-            b += rand() % 10;
-        }
-
-        median = sol.easyMedian(A, B);
-        attempt = sol.findMedianSortedArrays(A, B);
-
-        if (median != attempt) {
-            for (int val : A) {
-                cout << val << " ";
-            }
-            cout << endl;
-            for (int val : B) {
-                cout << val << " ";
-            }
-            cout << endl;
-            cout << "median: " << median << endl;
-            cout << "solution: " << attempt;
-            cout << endl;
-        }
-    }
+    test(Solution().findMedianSortedArrays({1, 3}, {2}), 2.0);
+    test(Solution().findMedianSortedArrays({1, 2}, {3, 4}), 2.5);
+    test(Solution().findMedianSortedArrays({0, 0}, {0, 0}), 0.0);
+    test(Solution().findMedianSortedArrays({}, {1}), 1.0);
+    test(Solution().findMedianSortedArrays({2}, {}), 2.0);
 
     return 0;
 }

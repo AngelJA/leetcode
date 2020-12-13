@@ -3,6 +3,8 @@
 #include <stack>
 #include <algorithm>
 
+#include "./util.h"
+
 using std::cout;
 using std::endl;
 using std::make_pair;
@@ -36,6 +38,9 @@ class Solution {
 };
 
 int main() {
-    cout << Solution().longestValidParentheses("))))((()((") << endl;
+    test(Solution().longestValidParentheses("(()"), 2);
+    test(Solution().longestValidParentheses(")()())"), 4);
+    test(Solution().longestValidParentheses(""), 0);
+
     return 0;
 }
