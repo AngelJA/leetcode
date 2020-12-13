@@ -1,3 +1,4 @@
+// https://leetcode.com/problems/trapping-rain-water/
 import {strict as assert} from 'assert';
 
 const trap = (height: number[]) => {
