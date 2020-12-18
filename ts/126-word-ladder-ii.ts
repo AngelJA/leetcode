@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/word-ladder-ii/
-import { test } from './util';
+import { runTests } from './util';
 
 class Node {
     parent: (Node | null);
@@ -80,15 +80,4 @@ const findLadders = (
     return paths;
 }
 
-test(
-  findLadders('hit', 'cog', ['hot', 'dot', 'dog', 'lot', 'log', 'cog']),
-  [
-    ['hit', 'hot', 'dot', 'dog', 'cog'],
-    ['hit', 'hot', 'lot', 'log', 'cog']
-  ]
-);
-
-test(
-  findLadders('hit', 'cog', ['hot', 'dot', 'dog', 'lot', 'log']),
-  []
-);
+runTests('126-word-ladder-ii.json', findLadders);
