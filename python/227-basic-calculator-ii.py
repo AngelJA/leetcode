@@ -33,7 +33,6 @@ class TestCases(unittest.TestCase):
 
 
 class Solution:
-    operators = '*/+-'
     operator_funcs = {
             '*': int.__mul__,
             '/': int.__floordiv__,
@@ -56,19 +55,20 @@ class Solution:
     @staticmethod
     def list_from_str(input_str):
         output_list = []
-        int_str = ''
+        num = 0
         for char in input_str:
-            if char in Solution.operators:
-                if int_str:
-                    output_list.append(int(int_str))
-                    int_str = ''
-                output_list.append(char)
+            if char.isdigit():
+                num = num * 10 + int(char)
             else:
-                int_str += char
-        output_list.append(int(int_str))
+                if char != ' ':
+                    output_list.append(num)
+                    output_list.append(char)
+                    num = 0
+        output_list.append(num)
                 
         return output_list
 
+    @staticmethod
     def do_operation(op_stack, num_stack):
         rnum = num_stack.pop()
         f = Solution.operator_funcs[op_stack.pop()]
@@ -85,7 +85,7 @@ class Solution:
             op_stack.append(elements[1])
             num_stack.append(elements[2])
 
-        for lnum, op, rnum in zip(elements[2::2], elements[3::2], elements[4::2]):
+        for op, rnum in zip(elements[3::2], elements[4::2]):
             while len(op_stack) and self.op_priority[op] <= self.op_priority[op_stack[-1]]:
                 Solution.do_operation(op_stack, num_stack)
 
